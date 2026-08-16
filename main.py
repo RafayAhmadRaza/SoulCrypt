@@ -1,56 +1,70 @@
-from cryptography.fernet import Fernet
-import sys
 import getpass
-import os
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-import base64
+import sys
+
+from cryptography.fernet import InvalidToken
+
+from soulcrypt import encrypt_text, decrypt_text
 
 
+def encrypt_file(input_path):
+    print("Remember to write your passphrase somewhere safe!")
+    passphrase = getpass.getpass("Enter Your Passphrase\n> ")
 
-arguments = sys.argv[1:]
+    poem = input("Enter your secrets: ")
 
-if len(arguments) !=2:
-    print("Error Number of Arguments is wrong")
-    sys.exit()
+    encrypted = encrypt_text(poem, passphrase)
 
-argument = arguments[0]
-poem_path = arguments[1]
+    with open(input_path, "wb") as secret_file:
+        secret_file.write(encrypted)
 
-print("Remember to write your passphrase somewhere so you can unencrypt your files!")
-print("Enter Your Passphrase")
-passphrase = getpass.getpass(">")
-
-salt = os.urandom(16)
-
-kdf = PBKDF2HMAC(
-    algorithm=hashes.SHA256(),
-    length=32,
-    salt=salt,
-    iterations=600_000,
-)
-
-key = base64.urlsafe_b64encode(
-    kdf.derive(passphrase.encode())
-)
-
-if argument == 'encrypt':
-    fernet = Fernet(key)
-    poem = input("Enter you secrets")
-
-    with open(poem_path,'wb') as secret_file:
-        poem_encypted = fernet.encrypt(poem.encode())
-        secret_file.write(salt)
-        secret_file.write(poem_encypted)
-        print(poem_encypted)
-        secret_file.close()
+    print("Your soul has been sealed.")
 
 
-elif argument == 'decrypt':
+def decrypt_file(input_path):
+    passphrase = getpass.getpass("Enter Your Passphrase\n> ")
 
-    fernet = Fernet(key)
-    with open(poem_path,'r') as f:
-        
-        decrypted_file = fernet.decrypt(f)
-        print(decrypted_file)
+    try:
+        with open(input_path, "rb") as secret_file:
+            encrypted = secret_file.read()
 
+        poem = decrypt_text(encrypted, passphrase)
+
+        print("\nYour soul has been restored:")
+        print(poem)
+
+    except FileNotFoundError:
+        print("Error: Soul file does not exist.")
+
+    except InvalidToken:
+        print("Error: Incorrect passphrase or corrupted Soul file.")
+
+    except ValueError as error:
+        print(f"Error: {error}")
+
+
+def main():
+    arguments = sys.argv[1:]
+
+    if len(arguments) != 2:
+        print("Usage:")
+        print("  python main.py encrypt <file>")
+        print("  python main.py decrypt <file>")
+        sys.exit(1)
+
+    command = arguments[0]
+    file_path = arguments[1]
+
+    if command == "encrypt":
+        encrypt_file(file_path)
+
+    elif command == "decrypt":
+        decrypt_file(file_path)
+
+    else:
+        print(f"Error: Unknown command '{command}'")
+        print("Use 'encrypt' or 'decrypt'.")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
