@@ -28,12 +28,14 @@ Install the dependency with:
 
 ```bash
 pip install cryptography
-
+```
 ## Use Example
 ### Encryption
 ```bash
 python main.py encrypt file_name.soul
-
+```
 ### Decryption
 ```bash
+
 python main.py decrypt file_name.soul
+```
