@@ -15,7 +15,7 @@ secret poetry.
 - Random 16-byte salt for every encrypted file
 - PBKDF2-HMAC-SHA256 key derivation
 - Fernet authenticated encryption
-- .soul` encrypted file format
+- .soul encrypted file format
 - Tampering detection
 - 16 unit tests
 - Pure Python
