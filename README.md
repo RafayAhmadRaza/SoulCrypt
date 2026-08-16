@@ -70,6 +70,7 @@ It was created to learn about:
 - File formats
 - Python CLI applications
 - Unit Testing
+
 Do not rely on SoulCrypt for protecting highly sensitive information without independently reviewing the implementation and its security.
 
 ## Requirements
