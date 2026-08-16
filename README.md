@@ -1,4 +1,4 @@
-# 🔐 SoulCrypt
+# SoulCrypt
 
 > Do you write things you want to keep hidden?
 > Look no further than **SoulCrypt**.
