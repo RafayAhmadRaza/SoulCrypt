@@ -26,7 +26,7 @@ def encrypt_file(input_path):
 
     encrypted = encrypt_text(poem, passphrase)
 
-    with open(input_path, "ab") as secret_file:
+    with open(input_path, "wb") as secret_file:
         secret_file.write(encrypted)
 
     print("Your soul has been sealed.")
