@@ -10,7 +10,19 @@ def encrypt_file(input_path):
     print("Remember to write your passphrase somewhere safe!")
     passphrase = getpass.getpass("Enter Your Passphrase\n> ")
 
-    poem = input("Enter your secrets: ")
+    print("Enter your secrets: ")
+    print("Type END on a new line when finished.")
+    lines = []
+
+    while True:
+        line = input()  
+        if line == "END":
+            break
+        lines.append(line)
+
+    poem = "\n".join(lines)
+
+
 
     encrypted = encrypt_text(poem, passphrase)
 
